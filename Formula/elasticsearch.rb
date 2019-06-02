@@ -1,8 +1,9 @@
 class Elasticsearch < Formula
   desc "Distributed search & analytics engine"
   homepage "https://www.elastic.co/products/elasticsearch"
-  url "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-oss-6.8.0.tar.gz"
-  sha256 "bd6c6613cf245a8ef19b476b2199555c01f842be54dd4213e03e8c28dabd7444"
+  url "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.1.1-darwin-x86_64.tar.gz"
+  version "7.1.1"
+  sha256 "e12c404fa03baaf1282dfd909048e5d1084c8fb4ff6f8e5898baf134907cbce7"
 
   head do
     url "https://github.com/elasticsearch/elasticsearch.git"
@@ -54,8 +55,7 @@ class Elasticsearch < Formula
 
     bin.install libexec/"bin/elasticsearch",
                 libexec/"bin/elasticsearch-keystore",
-                libexec/"bin/elasticsearch-plugin",
-                libexec/"bin/elasticsearch-translog"
+                libexec/"bin/elasticsearch-plugin"
     bin.env_script_all_files(libexec/"bin", Language::Java.java_home_env("1.8"))
   end
 
@@ -123,9 +123,10 @@ class Elasticsearch < Formula
 
     system "#{bin}/elasticsearch-plugin", "list"
     pid = testpath/"pid"
+
     begin
       system "#{bin}/elasticsearch", "-d", "-p", pid, "-Epath.data=#{testpath}/data", "-Ehttp.port=#{port}"
-      sleep 10
+      sleep 20
       system "curl", "-XGET", "localhost:#{port}/"
     ensure
       Process.kill(9, pid.read.to_i)
